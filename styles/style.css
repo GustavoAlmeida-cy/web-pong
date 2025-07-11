@@ -83,15 +83,15 @@ body {
   height: 10vh;
   border-radius: 4px;
   top: calc(var(--position) * 1vh);
-  transform: translateY(-100%);
+  transform: translateY(0);
 }
 
 .paddle.left {
-  left: 3vw;
+  left: 2vw;
 }
 
 .paddle.right {
-  right: 3vw;
+  right: 2vw;
 }
 
 /* Bola */
