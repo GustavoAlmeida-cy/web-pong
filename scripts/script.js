@@ -4,8 +4,12 @@ import Paddle from "./paddle.js";
 // Seleciona os elementos do DOM
 const gameField = document.getElementById("game-field");
 const ballElement = document.getElementById("ball");
+
 const playerPaddleElement = document.getElementById("player-paddle");
 const computerPaddleElement = document.getElementById("computer-paddle");
+
+const playerScoreElement = document.getElementById("player-score");
+const computerScoreElement = document.getElementById("computer-score");
 
 // Instâncias
 const ball = new Ball(ballElement);
@@ -19,10 +23,37 @@ function update(time) {
     const delta = time - lastTime;
     ball.update(delta, gameField);
     computerPaddle.update(delta, ball.y);
+
+    if (isLose()) {
+      handleLose();
+    }
   }
 
   lastTime = time;
   window.requestAnimationFrame(update);
+}
+
+function isLose() {
+  const fieldRect = gameField.getBoundingClientRect();
+  const ballRect = ball.rect();
+  return ballRect.left <= fieldRect.left || ballRect.right >= fieldRect.right;
+}
+
+function handleLose() {
+  const fieldRect = gameField.getBoundingClientRect();
+
+  const ballRect = ball.rect();
+
+  if (ballRect.right <= fieldRect.right) {
+    computerScoreElement.textContent =
+      parseInt(computerScoreElement.textContent) + 1;
+  } else {
+    playerScoreElement.textContent =
+      parseInt(playerScoreElement.textContent) + 1;
+  }
+
+  ball.reset();
+  computerPaddle.reset();
 }
 
 // Movimento do jogador com o mouse
