@@ -1,0 +1,93 @@
+/* Overhaul configs */
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Variables */
+:root {
+  /* Colors */
+  --hue: 200;
+  --saturation: 50%;
+  --foreground-color: hsl(var(--hue), var(--saturation), 85%);
+  --background-color: hsl(var(--hue), var(--saturation), 15%);
+
+  /* Positions */
+  --position: 50;
+  --x: 50;
+  --y: 50;
+}
+
+/* Components */
+html {
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+}
+
+#navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2vw;
+  padding: 4px;
+  font-size: 40px;
+  font-weight: 400;
+  width: 100%;
+}
+
+.separator {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.score-name {
+  font-size: 14px;
+  font-weight: thin;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Game */
+#game-field {
+  padding: 2vh 0;
+}
+
+/* Objects */
+.paddle {
+  position: absolute;
+  background-color: var(--foreground-color);
+  width: 2vh;
+  height: 10vh;
+  border-radius: 4px;
+  top: calc(var(--position) * 1vh);
+  transform: translateY(-50%);
+}
+
+.paddle.left {
+  left: 3vw;
+}
+
+.paddle.right {
+  right: 3vw;
+}
+
+.ball {
+  position: absolute;
+  background-color: var(--foreground-color);
+  width: 2vh;
+  height: 10vh;
+  border-radius: 4px;
+  top: calc(var(--position) * 1vh);
+  transform: translateY(-50%);
+}
