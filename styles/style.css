@@ -58,6 +58,14 @@ body {
   text-transform: uppercase;
 }
 
+.player-score {
+  text-align: right;
+}
+
+.computer-score {
+  text-align: left;
+}
+
 /* Game */
 #game-field {
   padding: 2vh 0;
@@ -85,9 +93,10 @@ body {
 .ball {
   position: absolute;
   background-color: var(--foreground-color);
-  width: 2vh;
-  height: 10vh;
-  border-radius: 4px;
-  top: calc(var(--position) * 1vh);
-  transform: translateY(-50%);
+  width: 2.5vh;
+  height: 2.5vh;
+  border-radius: 100%;
+  left: calc(var(--x) * 1vh);
+  top: calc(var(--y) * 1vh);
+  transform: translate(-50%, -50%);
 }
