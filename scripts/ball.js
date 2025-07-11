@@ -50,7 +50,7 @@ export default class Ball {
     this.velocity = INITIAL_VELOCITY;
   }
 
-  update(delta, gameFieldElement) {
+  update(delta, gameFieldElement, paddleRects) {
     this.x += this.direction.x * this.velocity * delta;
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
@@ -67,7 +67,21 @@ export default class Ball {
     if (ballRect.left <= fieldRect.left || ballRect.right >= fieldRect.right) {
       this.direction.x *= -1;
     }
+
+    // Colisão com paddles
+    if (paddleRects.some((r) => isCollision(r, ballRect))) {
+      this.direction.x *= -1;
+    }
   }
+}
+
+function isCollision(rect_1, rect_2) {
+  return (
+    rect_1.left <= rect_2.right &&
+    rect_1.right >= rect_2.left &&
+    rect_1.top <= rect_2.bottom &&
+    rect_1.bottom >= rect_2.top
+  );
 }
 
 function randomNumberBetween(min, max) {

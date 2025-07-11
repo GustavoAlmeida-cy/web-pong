@@ -21,7 +21,8 @@ let lastTime = null;
 function update(time) {
   if (lastTime != null) {
     const delta = time - lastTime;
-    ball.update(delta, gameField);
+
+    ball.update(delta, gameField, [playerPaddle.rect(), computerPaddle.rect()]);
     computerPaddle.update(delta, ball.y);
 
     if (isLose()) {
