@@ -1,4 +1,4 @@
-/* Overhaul configs */
+/* Reset geral */
 *,
 *::after,
 *::before {
@@ -8,42 +8,43 @@
   padding: 0;
 }
 
-/* Variables */
+/* Variáveis */
 :root {
-  /* Colors */
   --hue: 200;
   --saturation: 50%;
   --foreground-color: hsl(var(--hue), var(--saturation), 85%);
   --background-color: hsl(var(--hue), var(--saturation), 15%);
 
-  /* Positions */
   --position: 50;
   --x: 50;
   --y: 50;
 }
 
-/* Components */
-html {
-  overflow: hidden;
-}
-
+/* Layout principal */
+html,
 body {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
   background-color: var(--background-color);
   color: var(--foreground-color);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra superior */
 #navbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
   gap: 2vw;
   padding: 4px;
   font-size: 40px;
   font-weight: 400;
-  width: 100%;
+  flex-shrink: 0;
 }
 
 .separator {
@@ -66,12 +67,15 @@ body {
   text-align: left;
 }
 
-/* Game */
+/* Campo do jogo */
 #game-field {
-  padding: 2vh 0;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+  width: 100%;
 }
 
-/* Objects */
+/* Raquetes */
 .paddle {
   position: absolute;
   background-color: var(--foreground-color);
@@ -79,7 +83,7 @@ body {
   height: 10vh;
   border-radius: 4px;
   top: calc(var(--position) * 1vh);
-  transform: translateY(-50%);
+  transform: translateY(-100%);
 }
 
 .paddle.left {
@@ -90,13 +94,14 @@ body {
   right: 3vw;
 }
 
-.ball {
+/* Bola */
+#ball {
   position: absolute;
   background-color: var(--foreground-color);
   width: 2.5vh;
   height: 2.5vh;
   border-radius: 100%;
-  left: calc(var(--x) * 1vh);
+  left: calc(var(--x) * 1vw);
   top: calc(var(--y) * 1vh);
   transform: translate(-50%, -50%);
 }
