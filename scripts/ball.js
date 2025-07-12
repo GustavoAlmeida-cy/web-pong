@@ -7,6 +7,7 @@ export default class Ball {
     this.reset();
   }
 
+  // Getters e setters para posição usando CSS custom properties
   get x() {
     return parseFloat(
       getComputedStyle(this.ballElement).getPropertyValue("--x")
@@ -27,10 +28,12 @@ export default class Ball {
     this.ballElement.style.setProperty("--y", value);
   }
 
+  // Retorna o retângulo da bola para colisão
   rect() {
     return this.ballElement.getBoundingClientRect();
   }
 
+  // Centraliza e define uma nova direção aleatória válida
   reset() {
     this.x = 50;
     this.y = 50;
@@ -40,50 +43,50 @@ export default class Ball {
       Math.abs(this.direction.x) <= 0.2 ||
       Math.abs(this.direction.x) >= 0.9
     ) {
-      const heading = randomNumberBetween(0, 2 * Math.PI);
+      const angle = randomBetween(0, 2 * Math.PI);
       this.direction = {
-        x: Math.cos(heading),
-        y: Math.sin(heading),
+        x: Math.cos(angle),
+        y: Math.sin(angle),
       };
     }
 
     this.velocity = INITIAL_VELOCITY;
   }
 
-  update(delta, gameFieldElement, paddleRects) {
+  // Atualiza posição e trata colisões
+  update(delta, fieldElement, paddleRects) {
     this.x += this.direction.x * this.velocity * delta;
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
 
     const ballRect = this.rect();
-    const fieldRect = gameFieldElement.getBoundingClientRect();
+    const fieldRect = fieldElement.getBoundingClientRect();
 
-    // Colisão com topo e base do campo
+    // Rebater no topo/base
     if (ballRect.top <= fieldRect.top || ballRect.bottom >= fieldRect.bottom) {
       this.direction.y *= -1;
     }
 
-    // Colisão com laterais do campo
-    if (ballRect.left <= fieldRect.left || ballRect.right >= fieldRect.right) {
+    // Rebater nos paddles
+    if (paddleRects.some((paddleRect) => isColliding(paddleRect, ballRect))) {
       this.direction.x *= -1;
     }
 
-    // Colisão com paddles
-    if (paddleRects.some((r) => isCollision(r, ballRect))) {
-      this.direction.x *= -1;
-    }
+    // OBS: colisão lateral (left/right) está sendo tratada no script principal
   }
 }
 
-function isCollision(rect_1, rect_2) {
+// Detecta colisão entre dois retângulos (AABB)
+function isColliding(r1, r2) {
   return (
-    rect_1.left <= rect_2.right &&
-    rect_1.right >= rect_2.left &&
-    rect_1.top <= rect_2.bottom &&
-    rect_1.bottom >= rect_2.top
+    r1.left <= r2.right &&
+    r1.right >= r2.left &&
+    r1.top <= r2.bottom &&
+    r1.bottom >= r2.top
   );
 }
 
-function randomNumberBetween(min, max) {
+// Gera número aleatório entre min e max
+function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }

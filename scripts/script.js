@@ -1,13 +1,11 @@
 import Ball from "./ball.js";
 import Paddle from "./paddle.js";
 
-// Seleciona os elementos do DOM
+// DOM Elements
 const gameField = document.getElementById("game-field");
 const ballElement = document.getElementById("ball");
-
 const playerPaddleElement = document.getElementById("player-paddle");
 const computerPaddleElement = document.getElementById("computer-paddle");
-
 const playerScoreElement = document.getElementById("player-score");
 const computerScoreElement = document.getElementById("computer-score");
 
@@ -15,42 +13,48 @@ const computerScoreElement = document.getElementById("computer-score");
 const ball = new Ball(ballElement);
 const playerPaddle = new Paddle(playerPaddleElement);
 const computerPaddle = new Paddle(computerPaddleElement);
+
 let lastTime = null;
 
-// Atualização do jogo
+// Loop principal do jogo
 function update(time) {
-  if (lastTime != null) {
+  if (lastTime !== null) {
     const delta = time - lastTime;
 
+    // Anima cor de fundo suavemente
+    const hue = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue("--hue")
+    );
+    document.documentElement.style.setProperty("--hue", hue + delta * 0.01);
+
+    // Atualiza bola e paddle do computador
     ball.update(delta, gameField, [playerPaddle.rect(), computerPaddle.rect()]);
     computerPaddle.update(delta, ball.y);
 
-    if (isLose()) {
-      handleLose();
-    }
+    // Verifica derrota
+    if (isOutOfBounds()) handleScore();
   }
 
   lastTime = time;
-  window.requestAnimationFrame(update);
+  requestAnimationFrame(update);
 }
 
-function isLose() {
-  const fieldRect = gameField.getBoundingClientRect();
+// Verifica se a bola saiu pela lateral
+function isOutOfBounds() {
+  const { left, right } = gameField.getBoundingClientRect();
   const ballRect = ball.rect();
-  return ballRect.left <= fieldRect.left || ballRect.right >= fieldRect.right;
+  return ballRect.left <= left || ballRect.right >= right;
 }
 
-function handleLose() {
-  const fieldRect = gameField.getBoundingClientRect();
-
+// Atualiza placar e reseta elementos
+function handleScore() {
+  const { right } = gameField.getBoundingClientRect();
   const ballRect = ball.rect();
 
-  if (ballRect.right <= fieldRect.right) {
-    computerScoreElement.textContent =
-      parseInt(computerScoreElement.textContent) + 1;
+  if (ballRect.right <= right) {
+    computerScoreElement.textContent = +computerScoreElement.textContent + 1;
   } else {
-    playerScoreElement.textContent =
-      parseInt(playerScoreElement.textContent) + 1;
+    playerScoreElement.textContent = +playerScoreElement.textContent + 1;
   }
 
   ball.reset();
@@ -62,20 +66,17 @@ document.addEventListener("mousemove", (e) => {
   const fieldRect = gameField.getBoundingClientRect();
   const paddleRect = playerPaddleElement.getBoundingClientRect();
 
-  // Altura da raquete em % do campo
+  // Altura do paddle em % do campo
   const paddleHeightPercent = (paddleRect.height / fieldRect.height) * 100;
 
-  // Posição do mouse relativa ao topo do campo
-  const mouseY = e.clientY - fieldRect.top;
+  // Converte posição do mouse em % do campo
+  let percent = ((e.clientY - fieldRect.top) / fieldRect.height) * 100;
 
-  // Converter para porcentagem da altura do campo
-  let percent = (mouseY / fieldRect.height) * 100;
-
-  // Limitar para que o fundo da raquete (posição) nunca ultrapasse 100%
-  percent = Math.min(100 - paddleHeightPercent, Math.max(0, percent));
+  // Limita paddle para não ultrapassar os limites do campo
+  percent = Math.max(0, Math.min(100 - paddleHeightPercent, percent));
 
   playerPaddle.position = percent;
 });
 
 // Inicia o loop
-window.requestAnimationFrame(update);
+requestAnimationFrame(update);

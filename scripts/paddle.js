@@ -6,6 +6,7 @@ export default class Paddle {
     this.reset();
   }
 
+  // Get/Set da posição vertical em %
   get position() {
     return parseFloat(
       getComputedStyle(this.paddleElement).getPropertyValue("--position")
@@ -16,15 +17,18 @@ export default class Paddle {
     this.paddleElement.style.setProperty("--position", value);
   }
 
+  // Retângulo do paddle para colisão
   rect() {
     return this.paddleElement.getBoundingClientRect();
   }
 
+  // Centraliza o paddle verticalmente
   reset() {
     this.position = 50;
   }
 
-  update(delta, ballHeight) {
-    this.position += SPEED * delta * (ballHeight - this.position);
+  // Move em direção à posição vertical da bola
+  update(delta, targetY) {
+    this.position += SPEED * delta * (targetY - this.position);
   }
 }
